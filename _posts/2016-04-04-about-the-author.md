@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "About the Author"
+title: "关于作者"
 author: "Paul Le"
 categories: facts
 tags: [sample]
