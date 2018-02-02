@@ -4,7 +4,7 @@ title: "10 minutes to pandas（上）"
 author: "L-Y-N"
 categories: pandas
 tags: [pandas]
-image: 2018-02-02-10_minutes_to_pandas(1).png
+image: 2018-02-02-10MinutesToPandas1.png
 ---
 
 # 10 minutes to pandas（上） 
