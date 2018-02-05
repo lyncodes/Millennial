@@ -4,11 +4,11 @@ title: "TensorFlow ：GetStarted for ML Beginners"
 author: "L-Y-N"
 categories: tensorflow
 tags: [tensorflow]
-image: 2018-02-02-10MinutesToPandas2.png
+image: 2018-02-04-TensorFlow ：GetStarted for ML Beginners.png
 ---
 # TensorFlow ：GetStarted for ML Beginners
 
-TensorFlow的官网在get started中为没有接触过机器学习的人群，准备了一篇机器学习的基础介绍fgh
+TensorFlow的官网在get started中为没有接触过机器学习的人群，准备了一篇机器学习的基础介绍
 
 ## 问题背景介绍
 
@@ -94,4 +94,24 @@ features就是样本的characteristics（特点），而label就是我们将要�
 >
 > 模型就是在features和label中建立某种关系							————tensorflow 官网
 
-to be continued………………
+在这个例子中，是花瓣、花萼大小和花种类之间的关系。
+
+### 建模
+
+一些简单的模型可以用几行简单的线性代数进行描述，但是更多复杂的模型，涵盖了大量错综复杂的数学方程和参数，这让我们很难用数学来对其进行解释。
+
+在这个例子中，我们有可能用传统编程的方法，规定一大堆条件语句。也许我们可能用很长一段时间来搞清楚花瓣、花萼和种类之间的关系。然而，一个好的机器学习方法是自动为我们生成模型。
+
+如果我们给恰当的机器学习模型提供足量的具有代表性的数据样本，那么这个程序就能辨别在花瓣、花萼、花种之间的某种关系。
+
+### 训练
+
+训练就是在建立模型的过程中，对模型进行不断的优化的过程。
+
+Iris花的辨别过程，是一个监督学习的例子。
+
+> The Iris problem is an example of [**supervised machine learning**](https://developers.google.com/machine-learning/glossary/?hl=zh-cn#supervised_machine_learning) in which a model is trained from examples that contain labels. (In [**unsupervised machine learning**](https://developers.google.com/machine-learning/glossary/?hl=zh-cn#unsupervised_machine_learning), the examples don't contain labels. Instead, the model typically finds patterns among the features.
+
+* supervised ML(dataset with label)
+* unsupervised ML(dataset without label)
+
