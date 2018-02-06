@@ -4,7 +4,7 @@ title: "TensorFlow ：GetStarted for ML Beginners"
 author: "L-Y-N"
 categories: tensorflow
 tags: [tensorflow]
-image: 2018-02-04-TensorFlow ：GetStarted for ML Beginners.png
+image: 2018-02-04-GetStarted_for_ML_Beginners.png
 ---
 # TensorFlow ：GetStarted for ML Beginners
 
@@ -115,3 +115,54 @@ Iris花的辨别过程，是一个监督学习的例子。
 * supervised ML(dataset with label)
 * unsupervised ML(dataset without label)
 
+## 程序的执行
+
+源数据由tensorflow提供：
+
+https://github.com/tensorflow/models
+
+其中model文件夹内包含`premade_estimator.py`实例代码，将其运行之后，输出结果的最后几行如下所示：
+
+```python
+Prediction is "Sentosa" (99.5%), expected "Setosa"
+
+Prediction is "Versicolor" (99.7%), expected "Versicolor"
+
+Prediction is "Virginica" (96.6%), expected "Virginica"
+```
+
+## TensorFlow的程序架构
+
+tensorflow的编程环境。
+
+![tensorflow stack](https://www.tensorflow.org/images/tensorflow_programming_environment.png?hl=zh-cn)
+
+官方则强烈推荐新手关注于：
+
+* estimator
+* dataset
+
+## 对源码的解析
+
+接下来我们将对`premade_estimator.py`进行深入一点的了解
+
+首先程序的流程如下：
+
+- Import and parse the data sets.（导入并解析数据集）
+- Create feature columns to describe the data.（建立特征列来描述数据）
+- Select the type of model（选择模型种类）
+- Train the model.（训练模型）
+- Evaluate the model's effectiveness.（评估模型的有效性）
+- Let the trained model make predictions.（让训练好的模型做预测）
+
+### Import and parse the data sets.（导入并解析数据集）
+
+- train dataset：`http://download.tensorflow.org/data/iris_training.csv`
+- test dataset: `http://download.tensorflow.org/data/iris_test.csv`
+
+train set用于建立模型和对模型进行训练，test set用于对已经生成的模型进行测试。
+
+这中间有一个此起彼伏的关系在里面：
+
+* 更多的数据划分到train set中能够建立一个更准确的模型
+* 更多的数据划分到test set中能够更好的检验模型的有效性，否则我们不能准确的评估模型的准确性
