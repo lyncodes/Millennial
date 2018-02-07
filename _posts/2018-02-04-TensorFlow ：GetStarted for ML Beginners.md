@@ -166,3 +166,76 @@ train set用于建立模型和对模型进行训练，test set用于对已经生
 
 * 更多的数据划分到train set中能够建立一个更准确的模型
 * 更多的数据划分到test set中能够更好的检验模型的有效性，否则我们不能准确的评估模型的准确性
+
+`premade_estimator.py`依赖于`load_data`函数，而`load_data`函数在`iris_data.py`中，用于从网络上下载数据，并在本地将数据载入内存中。
+
+```python
+TRAIN_URL = "http://download.tensorflow.org/data/iris_training.csv"
+TEST_URL = "http://download.tensorflow.org/data/iris_test.csv"
+
+CSV_COLUMN_NAMES = ['SepalLength', 'SepalWidth',
+                    'PetalLength', 'PetalWidth', 'Species']
+
+...
+
+def load_data(label_name='Species'):
+    """Parses the csv file in TRAIN_URL and TEST_URL."""
+
+    # Create a local copy of the training set.
+    train_path = tf.keras.utils.get_file(fname=TRAIN_URL.split('/')[-1],
+                                         origin=TRAIN_URL)
+    # train_path now holds the pathname: ~/.keras/datasets/iris_training.csv
+
+    # Parse the local CSV file.
+    train = pd.read_csv(filepath_or_buffer=train_path,
+                        names=CSV_COLUMN_NAMES,  # list of column names
+                        header=0  # ignore the first row of the CSV file.
+                       )
+    # train now holds a pandas DataFrame, which is data structure
+    # analogous to a table.
+
+    # 1. Assign the DataFrame's labels (the right-most column) to train_label.
+    # 2. Delete (pop) the labels from the DataFrame.
+    # 3. Assign the remainder of the DataFrame to train_features
+    train_features, train_label = train, train.pop(label_name)
+
+    # Apply the preceding logic to the test set.
+    test_path = tf.keras.utils.get_file(TEST_URL.split('/')[-1], TEST_URL)
+    test = pd.read_csv(test_path, names=CSV_COLUMN_NAMES, header=0)
+    test_features, test_label = test, test.pop(label_name)
+
+    # Return four DataFrames.
+    return (train_features, train_label), (test_features, test_label)
+```
+
+`tf.keras`是tensorflow对Keras的封装，`tf.keras.utils.get_file`用于下载远程文件并在本地加载。
+
+`load_data`函数可以返回两对(feature,label)数据对。分别是训练数据和测试数据。
+
+```python
+    # Call load_data() to parse the CSV file.
+    (train_feature, train_label), (test_feature, test_label) = load_data()
+```
+
+### 对数据的描述
+
+特征列(**feature column**)是一种数据结构，用于在模型中对每一个特征进行数据解释。在Iris花分辨问题中，特征数据是浮点数。
+
+从代码的角度来说，我们建立一个`feature_column`对象。
+
+```python
+# Create feature columns for all features.
+my_feature_columns = []
+for key in train_x.keys():
+    my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+```
+
+**其中，train_x在load_data函数中定义**
+
+### 选择模型的种类
+
+我们需要在现有的多种的数据模型中选择合适的模型，来对其进行训练。在这里，我们选用神经网络来解决Iris花分类问题。
+
+**神经网络**能够在众多的features和labels中寻找出复杂的关系。一个神经网络是一个高度结构化的图型数据结构，由一层或多层隐藏层(hidden layers)组成。每一层都由一个或者多个神经元(neurons)组成。
+
+并且神经网络也有多种分类，在这里我们采用全连接神经网络(fully connected neural network)。即是每一层的神经元从上一层的所有神经元接受输入信息。
