@@ -238,4 +238,27 @@ for key in train_x.keys():
 
 **神经网络**能够在众多的features和labels中寻找出复杂的关系。一个神经网络是一个高度结构化的图型数据结构，由一层或多层隐藏层(hidden layers)组成。每一层都由一个或者多个神经元(neurons)组成。
 
-并且神经网络也有多种分类，在这里我们采用全连接神经网络(fully connected neural network)。即是每一层的神经元从上一层的所有神经元接受输入信息。
+并且神经网络也有多种分类，在这里我们采用全连接神经网络(fully connected neural network)。即是每一层的神经元从上一层的所有神经元接受输入信息。下图所示即是一个三层的神经网络示例：
+
+![3 layers hidden network](https://www.tensorflow.org/images/simple_dnn.svg)A neural network with three hidden layers.
+
+我们初始以一个估计器(Estimator)来具体指定一个模型的种类。tensorflow提供两种Estimator：
+
+* `pre-made Estimator`,已经写好的estimator
+* `custom estimator`,需要我们自己不全一部分代码
+
+我们在`premade_estimator.py`中用已经写好的分类器，即`tf.estimator.DNNClassifier`，可以建立一个基于DNN（deep neural network)深度神经网络的分类器(classifier)。代码如下：
+
+```python
+    classifier = tf.estimator.DNNClassifier(
+        feature_columns=my_feature_columns,
+        hidden_units=[10, 10],
+        n_classes=3)
+```
+
+其中的参数：
+
+* feature_columns由原始数据提取可得
+* hidden_units是一个list，每一个方向的分量代表表示每一层hidden layer中所包含的神经元个数
+* n_classses=3代表最后的输出节点个数，因为我们最后是将测试数据集分成三类，所以参数赋值为3.
+
