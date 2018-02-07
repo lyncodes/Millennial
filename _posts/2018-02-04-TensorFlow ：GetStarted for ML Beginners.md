@@ -26,8 +26,6 @@ iris花大约有300种，但是在这两个例子中我们的程序将只用于�
 
 ![seapal and petals](https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Petal-sepal.jpg/220px-Petal-sepal.jpg)				sepal是萼片	petal是花瓣
 
-
-
 ## 原始数据来源及处理
 
 幸运的是，已经有人对Iris花的相关原始数据进行了收集，向我们提供了150组数据
@@ -264,7 +262,7 @@ for key in train_x.keys():
 
 一般来说，增加神经网络的层数和每一层的神经元个数，会使模型更加有效，同时也需要更多的数据使模型训练更有效。
 
-### 训练这个模型
+## 训练这个模型
 
 模型已经建立起来了，将各个神经元连接起来，但是并没有让数据流经这个网络。为了训练这个网络，我们采用`train`方法：
 
@@ -280,7 +278,7 @@ for key in train_x.keys():
 
 这些参数称为超参数(**hyperparameter**)。选择合适的超参数通常需要经验。
 
-#### 数据随机化
+### 数据随机化
 
 `tf.dataset`class中有很多有用的函数，比如`shuffle`用于将原始数据进行随机排列。因为**拥有随机顺序的样本能够训练出最好的模型**。
 
@@ -294,5 +292,55 @@ for key in train_x.keys():
 
 通常来说，更小的`batch_size`能够使模型的训练更快，但是代价是模型准确性。
 
-### 对训练好的模型的评估
+### 对模型的评估
+
+对模型的评估，即是判断模型做预测的有效性。我们输入sepal和petal的width和length，然后要求模型预测出每一对数据所代表的Iris花种类。
+
+然后将预测值与数据的真实值进行比对。观察其与预测值的正确比例。
+
+每一个Estimator提供一个`evaluate`方法，来评估一个模型的有效性。代码如下：
+
+```python
+# Evaluate the model.
+eval_result = classifier.evaluate(
+    input_fn=lambda:eval_input_fn(test_x, test_y, args.batch_size))
+
+print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+```
+
+和前面调用`train`函数类似，传入test_x, test_y原始数据，并定义了`batch_size`。最后输出测试的准确度。
+
+## 做预测
+
+在搭建好模型、测试模型后，我们让模型对没有标签的示例(**unlabeled examples**)做一些预测。
+
+现在，我们手工提供三对数据：
+
+```python
+    predict_x = {
+        'SepalLength': [5.1, 5.9, 6.9],
+        'SepalWidth': [3.3, 3.0, 3.1],
+        'PetalLength': [1.7, 4.2, 5.4],
+        'PetalWidth': [0.5, 1.5, 2.1],
+    }
+```
+
+接下来采用`predict`方法，做出预测。
+
+```python
+predictions = classifier.predict(
+    input_fn=lambda:eval_input_fn(predict_x, batch_size=args.batch_size))
+```
+
+将会返回一个python中的字典，这个字典包含几对keys，`probabilities`标签将一组浮点数，每一个浮点数表示该样本是某种Iris花的可能性。
+
+如下所示：
+
+```python
+'probabilities': array([  1.19127117e-08,   3.97069454e-02,   9.60292995e-01])
+```
+
+**则表示当前样本有96.029%的可能性是第三种Iris花。**
+
+这次，对于机器学习的监督学习，我有了一个大概的了解，但是仍然有很多的不懂之处。尤其是tensorflow的框架结构，接下来更新 get started with Tensorflow。
 
