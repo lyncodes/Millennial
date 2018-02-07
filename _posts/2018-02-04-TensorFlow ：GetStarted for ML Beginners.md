@@ -260,5 +260,22 @@ for key in train_x.keys():
 
 * feature_columns由原始数据提取可得
 * hidden_units是一个list，每一个方向的分量代表表示每一层hidden layer中所包含的神经元个数
-* n_classses=3代表最后的输出节点个数，因为我们最后是将测试数据集分成三类，所以参数赋值为3.
+* n_classses=3代表最后的输出节点个数，因为我们最后是将测试数据集分成三类，所以参数赋值为3。
 
+一般来说，增加神经网络的层数和每一层的神经元个数，会使模型更加有效，同时也需要更多的数据使模型训练更有效。
+
+### 训练这个模型
+
+模型已经建立起来了，将各个神经元连接起来，但是并没有让数据流经这个网络。为了训练这个网络，我们采用`train`方法：
+
+```python
+    classifier.train(
+        input_fn=lambda:train_input_fn(train_feature, train_label, args.batch_size),
+        steps=args.train_steps)
+```
+
+* 输入数据为前面生成的(feature, label)数据对
+* batch_size是每次迭代的次数，值越大收敛越快
+* train_steps是一共要迭代的次数总数，默认为1000步
+
+这些参数称为超参数(**hyperparameter**)。选择合适的超参数通常需要经验和实验。
