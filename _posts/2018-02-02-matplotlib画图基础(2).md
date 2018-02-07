@@ -9,7 +9,7 @@ categories: matplotlib
 
 tags: [matplotlib]
 
-image: 2018-02-02-matplotlib_syntax1.png 
+image: 2018-02-02-matplotlib_syntax2.png 
 ---
 
 #  Matplotlib画图基础(2)
