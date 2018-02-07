@@ -278,4 +278,21 @@ for key in train_x.keys():
 * batch_size是每次迭代的次数，值越大收敛越快
 * train_steps是一共要迭代的次数总数，默认为1000步
 
-这些参数称为超参数(**hyperparameter**)。选择合适的超参数通常需要经验和实验。
+这些参数称为超参数(**hyperparameter**)。选择合适的超参数通常需要经验。
+
+#### 数据随机化
+
+`tf.dataset`class中有很多有用的函数，比如`shuffle`用于将原始数据进行随机排列。因为**拥有随机顺序的样本能够训练出最好的模型**。
+
+```python
+    dataset = dataset.shuffle(buffer_size=1000).repeat(count=None).batch(batch_size)
+```
+
+* 设置`buffer_size=1000`,大于样本数120，能够保证样本数据被良好的重新排序。
+* `repeat`方法，可以保证对训练的迭代能够有充足的数据量
+* `batch_size=100`即每次迭代，程序将100组数据样本组合起来，流经神经网络模型。
+
+通常来说，更小的`batch_size`能够使模型的训练更快，但是代价是模型准确性。
+
+### 对训练好的模型的评估
+
