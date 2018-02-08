@@ -9,7 +9,7 @@ menu:
 - {name: 'PYTHON&NUMPY学习', folder: 'pages', file: 'pynu.html'}
 - {name: 'PANDAS学习', folder: 'pages', file: 'pandas.html'}
 - {name: 'MATPLOTLIB学习', folder: 'pages', file: 'matplotlib.html'}
-- {name: 'TENSORFLOW学习', folder: 'pages', file: 'tensorflow.html'}
+- {name: 'TENSORFLOW学习', folder: 'pages', file: 'ml.html'}
 - {name: '随想杂谈', folder: 'pages', file: 'mixed.html'}
 - {name: 'About', folder: 'pages', file: 'about.html'}
 - {name: 'Contact', folder: 'pages', file: 'contact.html'}

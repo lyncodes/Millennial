@@ -2,7 +2,7 @@
 layout: post
 title: "TensorFlow ：GetStarted for ML Beginners"
 author: "L-Y-N"
-categories: tensorflow
+categories: ml
 tags: [tensorflow]
 image: 2018-02-04-GetStarted_for_ML_Beginners.png
 ---
