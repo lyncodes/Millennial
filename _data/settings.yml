@@ -6,7 +6,7 @@ disqus:
 # google-ID: 'UA-112060364-2'
 
 menu:
-- {name: 'PYTHON&NUMPY学习', folder: 'pages', file: 'pynu.html'}
+- {name: '语言学习', folder: 'pages', file: 'language.html'}
 - {name: 'PANDAS学习', folder: 'pages', file: 'pandas.html'}
 - {name: 'MATPLOTLIB学习', folder: 'pages', file: 'matplotlib.html'}
 - {name: '机器学习', folder: 'pages', file: 'ml.html'}
