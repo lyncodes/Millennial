@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "2018-02-08-Tensorflow之Feature Column"
+title: "Tensorflow之Feature Column"
 author: "L-Y-N"
 categories: ml
 tags: [tensorflow， machine learning]
@@ -185,4 +185,34 @@ sports
 ```
 
 ## Hashed Column(哈希列)
+
+到目前位置，我们只用简单的数字来进行分类。然而，在有大量分类的情况下，我们将不可能为每一个vocabulary word和integer划分一个独立的分类，因为那样太消耗内存了。针对这种情况，我们不禁问道：“针对我的输入信息，我需要多少个分类？”事实上，`tf.feature_column.categorical_column_with_hash_bucket`函数，这个`hash_buvket`函数就能够让我们明确的确定分类的数量。
+
+对于这种类型的特征列，模型会计算输入的哈希值，然后使用模运算符将其放入其中一个`hash_bucket_size`类别中，如下面的伪代码所示：
+
+```python
+# pseudocode
+feature_id = hash(raw_feature) % hash_buckets_size
+```
+
+创建`feature_column`de 代码如下：
+
+```python
+hashed_feature_column =
+    tf.feature_column.categorical_column_with_hash_bucket(
+        key = "some_feature",
+        hash_buckets_size = 100) # The number of categories
+```
+
+**简单来说，就是由我们指定一共生成多少个种类，而不是直接生成很多很多种类，以至于我们看不过来，这里是指定生成了100个种类。**
+
+但是，这可能会出错，这很有可能会把一些本该分开的数据合并到同一个种类中了，如下图所示：
+
+![hash bucket](https://www.tensorflow.org/images/feature_columns/hashed_column.jpg)
+
+图中，`kitchenware`和`sports`都被划分到了12组中，而它们本应该被分开。
+
+**虽然在机器学习中有很多违反直觉的现象，但是在实践中，hasd的结果往往却很有效！**这是因为hash categories为研究模型提供了**额外的特征**将`kitchenware`和`sports`进一步划分开。
+
+## Crossed column
 
