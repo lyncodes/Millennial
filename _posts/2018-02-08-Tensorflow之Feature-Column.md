@@ -117,4 +117,72 @@ bucketized_feature_column = tf.feature_column.bucketized_column(
 
 ![categorical identity columns](https://www.tensorflow.org/images/feature_columns/categorical_column_with_identity.jpg)
 
-一个满秩的向量组可以用于表达R（A)=n的n阶分类问题。
+一个满秩的向量组可以用于表达R（A)=n的n阶分类问题。在bucketized column中，模型能够在分类表示列中，对每一个`class`的学习赋予的权重。比如 用独一无二的整数来表示一个分类，而不是用字符串来代表分类。
+
+- `0="kitchenware"`
+- `1="electronics"`
+- `2="sport"`
+
+**用数字代表分类之后**，调用`tf.feature_column.categorical_column_with_identity`函数，来实现分类标识列(categorical identity column)。代码如下：
+
+```python
+#建立feature column，叫做"my_feature_b",
+# 设定buckets的数量为4，即分成4部分
+identity_feature_column = tf.feature_column.categorical_column_with_identity(
+    key='my_feature_b',
+    num_buckets=4) # Values [0, 4)
+
+#同时，input_fn()函数必须返回一个字典，用于盛放feature_b的数据，并且其中的数字必须在0-4之间
+def input_fn():
+    ...
+    return ({ 'my_feature_a':[7, 9, 5, 2], 'my_feature_b':[3, 1, 2, 2] },
+            [Label_values])
+```
+
+## 分类词汇列
+
+有时候，并不把字符串转化成为整数。而是直接用矩阵来代表他们。
+
+![categorical vocabulary column](https://www.tensorflow.org/images/feature_columns/categorical_column_with_vocabulary.jpg)
+
+tensorflow提供两种方法来生成categorical vocabulary columns：
+
+- `tf.feature_column.categorical_column_with_vocabulary_list`
+- `tf.feature_column.categorical_column_with_vocabulary_file`
+
+其中一个是list函数，一个是file函数。
+
+**list函数，基于显式词汇表将每个字符串映射成整数。**代码如下：
+
+```python
+vocabulary_feature_column =
+    tf.feature_column.categorical_column_with_vocabulary_list(
+        key="a feature returned by input_fn()",
+        vocabulary_list=["kitchenware", "electronics", "sports"])
+#通过在输入和vocabulary_lsit中建立映射，建立一个categorical feature
+```
+
+用list函数，调用过程非常直观，但是却有一个非常明显的缺点。当这个list非常长的时候，我们不可能来将其全部手动输入，所以我们就调用file函数，`tf.feature_column.categorical_column_with_vocabulary_file`。代码如下：
+
+```python
+vocabulary_feature_column =
+    tf.feature_column.categorical_column_with_vocabulary_file(
+        key="a feature returned by input_fn()",
+        vocabulary_file="product_class.txt",
+        vocabulary_size=3)
+```
+
+**参数中指定文件为product_class.txt**
+
+**vocabulary_saize=3,表示这个txt文件中的元素个数，参考上面的list函数，一共3个元素，所以为3**。当然还有很多其他参数设置，详情查看tensorflow的API文档。
+
+而其中的`produc_class.txt`文件则包含如下三个元素。
+
+```python
+kitchenware
+electronics
+sports
+```
+
+## Hashed Column(哈希列)
+
