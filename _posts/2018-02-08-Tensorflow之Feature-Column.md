@@ -216,3 +216,64 @@ hashed_feature_column =
 
 ## Crossed column
 
+将不同的feature整合进入单个feature中，后者说是`feature crosses`,让模型对每一个整合feature都能学习到单独的权重。
+
+具体点来说，假定我们想要计算Altlanta和Geogia的房价,而且房价受城市位置的影响变化很大。以经度和纬度作为独立的特征，来表示房产的位置并不是很有效。然而，结合经度和维度成为单个特征就能确定一个点，进而确定房产的位置。假定我们用一个100*100结构的矩形区域来表示Altlanta区域，总共10000个小块，分别用经度和维度的组合**feature cross of latitude and longtitude**来分辨它们。这让我们能够划分1000份出来，这样就精细多了，避免了只用经度和只用维度的局限性。如图所示：
+
+![cross featuer](https://www.tensorflow.org/images/feature_columns/Atlanta.jpg)
+
+**这里我真的是要吐槽一下tensorflow的官方文档了，直接就说结合经度和维度进行点定位，比单独使用经纬度能够将区域划分更精细，更便于统计。**
+
+==或者说更简练一点，一维划分变成二维划分，显然更有效啊！==
+
+==官方文档有时候还是写得很啰嗦的。希望大家都能够在读懂官方文档的基础上，自己用另外的说法复述出来，这是相当有效的学习方式==
+
+言归正传：
+
+示例代码如下：
+
+```python
+def make_dataset(latitude, longitude, labels):
+    assert latitude.shape == longitude.shape == labels.shape
+
+    features = {'latitude': latitude.flatten(),
+                'longitude': longitude.flatten()}
+    labels=labels.flatten()
+
+    return tf.data.Dataset.from_tensor_slices((features, labels))
+
+# Bucketize the latitude and longitude usig the `edges`
+latitude_bucket_fc = tf.feature_column.bucketized_column(
+    tf.feature_column.numeric_column('latitude'),
+    list(atlanta.latitude.edges))
+
+longitude_bucket_fc = tf.feature_column.bucketized_column(
+    tf.feature_column.numeric_column('longitude'),
+    list(atlanta.longitude.edges))
+
+# Cross the bucketized columns, using 5000 hash bins.
+crossed_lat_lon_fc = tf.feature_column.crossed_column(
+    [latitude_bucket_fc, longitude_bucket_fc], 5000)
+
+fc = [
+    latitude_bucket_fc,
+    longitude_bucket_fc,
+    crossed_lat_lon_fc]
+
+# Build and train the Estimator.
+est = tf.estimator.LinearRegressor(fc, ...)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+# TO BE CONTINUED
