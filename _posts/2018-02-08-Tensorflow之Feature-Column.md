@@ -233,6 +233,7 @@ hashed_feature_column =
 示例代码如下：
 
 ```python
+
 def make_dataset(latitude, longitude, labels):
     assert latitude.shape == longitude.shape == labels.shape
 
@@ -242,16 +243,18 @@ def make_dataset(latitude, longitude, labels):
 
     return tf.data.Dataset.from_tensor_slices((features, labels))
 
-# Bucketize the latitude and longitude usig the `edges`
+#用edges方法，将经度、纬度进行bucktized
 latitude_bucket_fc = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column('latitude'),
-    list(atlanta.latitude.edges))
+    list(atlanta.latitude.edges))#edges方法
 
 longitude_bucket_fc = tf.feature_column.bucketized_column(
     tf.feature_column.numeric_column('longitude'),
     list(atlanta.longitude.edges))
 
-# Cross the bucketized columns, using 5000 hash bins.
+# 调用crossed_column函数，将latitude和longtitude进行结合
+#这样，我们就将一个点的坐标变成了一个feature
+# 5000在官方API中，是`hash_bucket_size`,
 crossed_lat_lon_fc = tf.feature_column.crossed_column(
     [latitude_bucket_fc, longitude_bucket_fc], 5000)
 
@@ -264,13 +267,28 @@ fc = [
 est = tf.estimator.LinearRegressor(fc, ...)
 ```
 
+>`hash_bucket_size` works by taking the original indices, hashing them into a space of the specified size, and using the hashed indices as features.
+>
+>This means you can specify your model before knowing the full range of possible indices, at the cost of some indices maybe colliding.————stackoverflow
 
+>`hash_bucket_size` 用于按照原先的索引顺序，将这些书hash成指定的size，并且用hash过的索引作为特征。——————来自StackOverflow
 
+当`latitude_bucket_fc`和`longtitude_bucket_fc`被交叉后，tensorflow将会创建（latitude_fc,longtitude_fc)数据对。这将产生一个完整的可能性网格，如下所示：
 
+```python
+ (0,0),  (0,1)...  (0,99)
+ (1,0),  (1,1)...  (1,99)
+   ...     ...       ...
+(99,0), (99,1)...(99, 99)
+```
 
+## 指示器列和嵌入列
 
+指示器列和嵌入列并不直接操作特征，而是将分类列(categorical columns)作为输入。
 
+indicator column将每一个分类当作是独热向量（one-hot vector）中的元素。one-hot向量即是一行向量中，只有一个1，剩下全是0。如下所示：
 
+![one-hot vector](https://www.tensorflow.org/images/feature_columns/categorical_column_with_identity.jpg)
 
 
 
